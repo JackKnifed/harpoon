@@ -9,6 +9,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"os/exec"
@@ -173,7 +174,7 @@ func HeyHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	flag.BoolVar(&verbose, "v", false, "Whether we output stuff.")
 	flag.BoolVar(&verboseTunnel, "vt", false, "Whether we output stuff regarding tunneling.")
-	flag.StringVar(&configFile, "c", "", "config file to load other than ./config.toml")
+	flag.StringVar(&configFile, "c", "./config.toml", "config file to load other than ./config.toml")
 	flag.Parse()
 
 	// load the config.toml
@@ -215,5 +216,5 @@ func main() {
 	r.HandleFunc("/", HookHandler).Methods("POST")
 	r.HandleFunc("/", HeyHandler).Methods("GET")
 	readyToListen = true
-	http.ListenAndServe(addr, r)
+	log.Fatal(http.ListenAndServe(addr, r))
 }
