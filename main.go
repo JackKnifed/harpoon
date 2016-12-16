@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/hex"
@@ -124,32 +123,12 @@ func handleEvent(event string, hook HookWithRepository, payload []byte) {
 
 	// in case of -verbose we log the output of the executed command
 	if verbose {
-		cmdReader, err := cmd.StdoutPipe()
-		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error creating StdoutPipe for Cmd", err)
-			return
-		}
-		scanner := bufio.NewScanner(cmdReader)
-		go func() {
-			for scanner.Scan() {
-				color.White("> " + scanner.Text() + "\n")
-			}
-		}()
-		cmdReader, err = cmd.StderrPipe()
-		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error creating StderrPipe for Cmd", err)
-			return
-		}
-		scanner = bufio.NewScanner(cmdReader)
-		go func() {
-			for scanner.Scan() {
-				color.Yellow("> " + scanner.Text() + "\n")
-			}
-		}()
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
 	}
 
 	// launch it
-	err := cmd.Start()
+	err := cmd.Run()
 	if err != nil {
 		color.Set(color.FgRed)
 		fmt.Fprintln(os.Stderr, "Error starting Cmd", err)
