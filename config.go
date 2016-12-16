@@ -23,12 +23,7 @@ type event struct {
 func loadConfig() tomlConfig {
 	var config tomlConfig
 	var err error
-	if _, err = toml.DecodeFile(configFile, &config); err == nil {
-		return config
-	}
-	fmt.Println(err)
-	fmt.Println("failed loading config, going to fallback")
-	if _, err = toml.DecodeFile("./config.toml", &config); err != nil {
+	if _, err = toml.DecodeFile(configFile, &config); err != nil {
 		fmt.Println(err)
 		panic("nope")
 	}

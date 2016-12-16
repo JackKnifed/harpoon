@@ -126,3 +126,17 @@ func TestPushEventBadRepo(t *testing.T) {
 
 	t.Logf("Data returned: %v", data)
 }
+
+func ExampleLoadConfig() {
+	configFile = "badfileTarget"
+	defer func() {
+		if r := recover(); r != "nope" {
+			fmt.Println("got wrong panic")
+		}
+	}()
+	loadConfig()
+	//
+	// Output:
+	// open badfileTarget: no such file or directory
+
+}
